@@ -99,7 +99,7 @@ for x in range(10):
     randomLamp("lamp1")
 
     # Create a cube
-    cube = randomObject()
+    randomObject()
 
     # Create the plane
     bpy.ops.mesh.primitive_plane_add(radius=10, location=absoluteLowestPoint())
