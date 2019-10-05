@@ -4,11 +4,13 @@ import math
 import mathutils
 
 
-def randomLightPosition():
-    x = random.uniform(2, 4) * pow(-1, random.randint(1, 2))
-    y = random.uniform(2, 4) * pow(-1, random.randint(1, 2))
-    z = random.uniform(0.2, 5)
-    return (x, y, z)
+def randomSpherePosition(dist):
+    phi = math.radians(random.uniform(0, 360))
+    theta = math.radians(random.uniform(10, 80))
+    xc = dist * math.sin(theta) * math.cos(phi)
+    yc = dist * math.sin(theta) * math.sin(phi)
+    zc = dist * math.cos(theta)
+    return (xc, yc, zc)
 
 
 def objectLowestPoint(obj):
@@ -31,18 +33,20 @@ def absoluteLowestPoint():
 
 
 def randomObject():
-    a=random.random()
-    if a < 0.33:
+    a = random.random()
+    if a < 0.25:
         return randomCube()
-    if a < 0.66:
+    if a < 0.50:
         return randomTorus()
+    if a < 0.75:
+        return randomCone()
     return randomMonkey()
 
 
 def randomCube():
     bpy.ops.mesh.primitive_cube_add(location=(0, 0, 0),
                                     rotation=(
-                                    random.uniform(0, 3.14), random.uniform(0, 3.14), random.uniform(0, 3.14)))
+                                        random.uniform(0, 3.14), random.uniform(0, 3.14), random.uniform(0, 3.14)))
     c = bpy.context.object
     mat = bpy.data.materials.new("Mat1")
     mat.diffuse_color = (random.random(), random.random(), random.random())
@@ -60,10 +64,21 @@ def randomMonkey():
     return c
 
 
+def randomCone():
+    bpy.ops.mesh.primitive_cone_add(location=(0, 0, 0),
+                                    rotation=(
+                                        random.uniform(0, 3.14), random.uniform(0, 3.14), random.uniform(0, 3.14)))
+    c = bpy.context.object
+    mat = bpy.data.materials.new("Mat1")
+    mat.diffuse_color = (random.random(), random.random(), random.random())
+    c.active_material = mat
+    return c
+
+
 def randomTorus():
     bpy.ops.mesh.primitive_torus_add(location=(0, 0, 0),
                                      rotation=(
-                                     random.uniform(0, 3.14), random.uniform(0, 3.14), random.uniform(0, 3.14)))
+                                         random.uniform(0, 3.14), random.uniform(0, 3.14), random.uniform(0, 3.14)))
     c = bpy.context.object
     mat = bpy.data.materials.new("Mat1")
     mat.diffuse_color = (random.random(), random.random(), random.random())
@@ -72,27 +87,23 @@ def randomTorus():
 
 
 def randomLamp(name):
-    pos = randomLightPosition()
+    pos = randomSpherePosition(7)
     bpy.ops.object.lamp_add(type='POINT', location=pos)
     bpy.context.object.data.shadow_method = 'RAY_SHADOW'
-    bpy.context.object.data.energy = random.uniform(0.5, 2)
+    bpy.context.object.data.energy = random.uniform(0.5, 3)
     bpy.context.object.name = name
 
 
 def randomCamera(name):
-    phi = math.radians(random.uniform(0, 360))
-    theta = math.radians(random.uniform(45, 80))
-    xc = 10 * math.sin(theta) * math.cos(phi)
-    yc = 10 * math.sin(theta) * math.sin(phi)
-    zc = 10 * math.cos(theta)
-    bpy.ops.object.camera_add(location=(xc, yc, zc))
+    loc = randomSpherePosition(8)
+    bpy.ops.object.camera_add(location=loc)
     bpy.context.object.name = name
     camera = bpy.context.object
-    looking_direction = mathutils.Vector((xc, yc, zc)) - mathutils.Vector((0.0, 0.0, 0.0))
+    looking_direction = mathutils.Vector(loc) - mathutils.Vector((0.0, 0.0, 0.0))
     rot_quat = looking_direction.to_track_quat('Z', 'Y')
     camera.rotation_euler = rot_quat.to_euler()
-    camera.location = rot_quat * mathutils.Vector((0.0, 0.0, 15)) + mathutils.Vector(
-        [random.uniform(-1, 1), random.uniform(-1, 1), random.uniform(-1, 1)])
+    camera.location = rot_quat * mathutils.Vector((0.0, 0.0, random.uniform(10, 20))) + mathutils.Vector(
+        [random.uniform(-1, 1), random.uniform(-1, 1), random.uniform(-2, 2)])
     bpy.context.scene.camera = camera
 
 
