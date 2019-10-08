@@ -112,7 +112,9 @@ world = bpy.data.worlds['World']
 world.light_settings.use_environment_light = True
 world.light_settings.environment_energy = 0.2
 
-for x in range(10):
+
+for x in range(100):
+
     # Delete the original default objects
     bpy.ops.object.select_by_type(type='MESH')
     bpy.ops.object.delete(use_global=False)
@@ -133,7 +135,17 @@ for x in range(10):
     # Create the plane
     bpy.ops.mesh.primitive_plane_add(radius=10, location=absoluteLowestPoint())
 
-    # Rendering
+    # Rendering (shadow + fog)
+    world.mist_settings.use_mist = True
+    world.mist_settings.intensity = random.uniform(0.2, 0.95)
+    bpy.context.scene.render.image_settings.file_format = 'PNG'
+    bpy.context.scene.render.filepath = "D:/kocka/images/image" + str(x) + "shadowFOG.png"
+    bpy.context.scene.render.resolution_x = 600
+    bpy.context.scene.render.resolution_y = 300
+    bpy.ops.render.render(write_still=1)
+
+    # Rendering (no fog + shadow)
+    world.mist_settings.use_mist = False
     bpy.context.scene.render.image_settings.file_format = 'PNG'
     bpy.context.scene.render.filepath = "D:/kocka/images/image" + str(x) + "shadow.png"
     bpy.context.scene.render.resolution_x = 600
@@ -142,7 +154,7 @@ for x in range(10):
 
     bpy.data.objects['lamp1'].data.shadow_method = 'NOSHADOW'
 
-    # Rendering
+    # Rendering (no fog + no shadow)
     bpy.context.scene.render.image_settings.file_format = 'PNG'
     bpy.context.scene.render.filepath = "D:/kocka/images/image" + str(x) + "noshadow.png"
     bpy.context.scene.render.resolution_x = 600
