@@ -117,7 +117,7 @@ world.light_settings.environment_energy = 0.2
 # world.mist_settings.depth = 15
 # world.mist_settings.height = 10
 
-for x in range(5000):
+for x in range(5):
 
     # Delete the original default objects
     bpy.ops.object.select_by_type(type='MESH')
@@ -141,16 +141,36 @@ for x in range(5000):
 
     # Rendering (with shadow)
     bpy.context.scene.render.image_settings.file_format = 'PNG'
-    bpy.context.scene.render.filepath = "D:/kocka/images/shadow/image" + str(x) + ".png"
-    bpy.context.scene.render.resolution_x = 200
-    bpy.context.scene.render.resolution_y = 200
+    bpy.context.scene.render.filepath = "D:/kocka/images/shadow2/image" + str(x) + ".png"
+    bpy.context.scene.render.resolution_x = 400
+    bpy.context.scene.render.resolution_y = 400
     bpy.ops.render.render(write_still=1)
 
-    # bpy.data.objects['lamp1'].data.shadow_method = 'NOSHADOW'
-    #
-    # # Rendering (without shadow)
-    # bpy.context.scene.render.image_settings.file_format = 'PNG'
-    # bpy.context.scene.render.filepath = "D:/kocka/images/noshadow/image" + str(x) + ".png"
-    # bpy.context.scene.render.resolution_x = 200
-    # bpy.context.scene.render.resolution_y = 200
-    # bpy.ops.render.render(write_still=1)
+    # Delete the original default objects
+    bpy.ops.object.select_by_type(type='MESH')
+    bpy.ops.object.delete(use_global=False)
+    bpy.ops.object.select_by_type(type='LAMP')
+    bpy.ops.object.delete(use_global=False)
+    bpy.ops.object.select_by_type(type='CAMERA')
+    bpy.ops.object.delete(use_global=False)
+
+    # Add a camera
+    randomCamera("camera1", random.uniform(2, 4))
+
+    # Add a lamp.
+    randomLamp("lamp1")
+
+    # Create a cube
+    randomObject()
+
+    # Create the plane
+    bpy.ops.mesh.primitive_plane_add(radius=10, location=absoluteLowestPoint())
+
+    bpy.data.objects['lamp1'].data.shadow_method = 'NOSHADOW'
+
+    # Rendering (without shadow)
+    bpy.context.scene.render.image_settings.file_format = 'PNG'
+    bpy.context.scene.render.filepath = "D:/kocka/images/noshadow2/image" + str(x) + ".png"
+    bpy.context.scene.render.resolution_x = 400
+    bpy.context.scene.render.resolution_y = 400
+    bpy.ops.render.render(write_still=1)
