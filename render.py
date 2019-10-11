@@ -94,8 +94,8 @@ def randomLamp(name):
     bpy.context.object.name = name
 
 
-def randomCamera(name):
-    loc = randomSpherePosition(8)
+def randomCamera(name, dist):
+    loc = randomSpherePosition(dist)
     bpy.ops.object.camera_add(location=loc)
     bpy.context.object.name = name
     camera = bpy.context.object
@@ -103,7 +103,7 @@ def randomCamera(name):
     rot_quat = looking_direction.to_track_quat('Z', 'Y')
     camera.rotation_euler = rot_quat.to_euler()
     camera.location = rot_quat * mathutils.Vector((0.0, 0.0, random.uniform(10, 20))) + mathutils.Vector(
-        [random.uniform(-1, 1), random.uniform(-1, 1), random.uniform(-2, 2)])
+        [random.uniform(-3, 3), random.uniform(-3, 3), 0])
     bpy.context.scene.camera = camera
 
 
@@ -111,9 +111,13 @@ def randomCamera(name):
 world = bpy.data.worlds['World']
 world.light_settings.use_environment_light = True
 world.light_settings.environment_energy = 0.2
+# world.mist_settings.use_mist = True
+# world.mist_settings.intensity = random.uniform(0.2, 0.95)
+# world.mist_settings.intensity = 0.6
+# world.mist_settings.depth = 15
+# world.mist_settings.height = 10
 
-
-for x in range(100):
+for x in range(5000):
 
     # Delete the original default objects
     bpy.ops.object.select_by_type(type='MESH')
@@ -124,7 +128,7 @@ for x in range(100):
     bpy.ops.object.delete(use_global=False)
 
     # Add a camera
-    randomCamera("camera1")
+    randomCamera("camera1", random.uniform(2, 4))
 
     # Add a lamp.
     randomLamp("lamp1")
@@ -135,28 +139,18 @@ for x in range(100):
     # Create the plane
     bpy.ops.mesh.primitive_plane_add(radius=10, location=absoluteLowestPoint())
 
-    # Rendering (shadow + fog)
-    world.mist_settings.use_mist = True
-    world.mist_settings.intensity = random.uniform(0.2, 0.95)
+    # Rendering (with shadow)
     bpy.context.scene.render.image_settings.file_format = 'PNG'
-    bpy.context.scene.render.filepath = "D:/kocka/images/image" + str(x) + "shadowFOG.png"
-    bpy.context.scene.render.resolution_x = 600
-    bpy.context.scene.render.resolution_y = 300
+    bpy.context.scene.render.filepath = "D:/kocka/images/shadow/image" + str(x) + ".png"
+    bpy.context.scene.render.resolution_x = 200
+    bpy.context.scene.render.resolution_y = 200
     bpy.ops.render.render(write_still=1)
 
-    # Rendering (no fog + shadow)
-    world.mist_settings.use_mist = False
-    bpy.context.scene.render.image_settings.file_format = 'PNG'
-    bpy.context.scene.render.filepath = "D:/kocka/images/image" + str(x) + "shadow.png"
-    bpy.context.scene.render.resolution_x = 600
-    bpy.context.scene.render.resolution_y = 300
-    bpy.ops.render.render(write_still=1)
-
-    bpy.data.objects['lamp1'].data.shadow_method = 'NOSHADOW'
-
-    # Rendering (no fog + no shadow)
-    bpy.context.scene.render.image_settings.file_format = 'PNG'
-    bpy.context.scene.render.filepath = "D:/kocka/images/image" + str(x) + "noshadow.png"
-    bpy.context.scene.render.resolution_x = 600
-    bpy.context.scene.render.resolution_y = 300
-    bpy.ops.render.render(write_still=1)
+    # bpy.data.objects['lamp1'].data.shadow_method = 'NOSHADOW'
+    #
+    # # Rendering (without shadow)
+    # bpy.context.scene.render.image_settings.file_format = 'PNG'
+    # bpy.context.scene.render.filepath = "D:/kocka/images/noshadow/image" + str(x) + ".png"
+    # bpy.context.scene.render.resolution_x = 200
+    # bpy.context.scene.render.resolution_y = 200
+    # bpy.ops.render.render(write_still=1)
