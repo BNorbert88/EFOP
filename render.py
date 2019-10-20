@@ -107,6 +107,16 @@ def randomCamera(name, dist):
     bpy.context.scene.camera = camera
 
 
+def deleteAll():
+    bpy.ops.object.select_by_type(type='MESH')
+    bpy.ops.object.delete(use_global=False)
+    bpy.ops.object.select_by_type(type='LAMP')
+    bpy.ops.object.delete(use_global=False)
+    bpy.ops.object.select_by_type(type='CAMERA')
+    bpy.ops.object.delete(use_global=False)
+
+
+
 # Setup a global environmental lightning
 world = bpy.data.worlds['World']
 world.light_settings.use_environment_light = True
@@ -117,15 +127,9 @@ world.light_settings.environment_energy = 0.2
 # world.mist_settings.depth = 15
 # world.mist_settings.height = 10
 
-for x in range(5):
-
+for x in range(5000):
     # Delete the original default objects
-    bpy.ops.object.select_by_type(type='MESH')
-    bpy.ops.object.delete(use_global=False)
-    bpy.ops.object.select_by_type(type='LAMP')
-    bpy.ops.object.delete(use_global=False)
-    bpy.ops.object.select_by_type(type='CAMERA')
-    bpy.ops.object.delete(use_global=False)
+    deleteAll()
 
     # Add a camera
     randomCamera("camera1", random.uniform(2, 4))
@@ -147,12 +151,7 @@ for x in range(5):
     bpy.ops.render.render(write_still=1)
 
     # Delete the original default objects
-    bpy.ops.object.select_by_type(type='MESH')
-    bpy.ops.object.delete(use_global=False)
-    bpy.ops.object.select_by_type(type='LAMP')
-    bpy.ops.object.delete(use_global=False)
-    bpy.ops.object.select_by_type(type='CAMERA')
-    bpy.ops.object.delete(use_global=False)
+    deleteAll()
 
     # Add a camera
     randomCamera("camera1", random.uniform(2, 4))
