@@ -3,8 +3,14 @@ import random
 import math
 import mathutils
 
+"""
+Define a position around the origin above the horizontal plane with a given distance.
 
-# Define a position around the origin above the horizontal plane
+@type dist: float
+@param dist: how far is the point from the origin
+@rtype: tuple
+@return: coordinates of a point
+"""
 def randomSpherePosition(dist):
     phi = math.radians(random.uniform(0, 360))
     theta = math.radians(random.uniform(10, 80))
@@ -14,14 +20,26 @@ def randomSpherePosition(dist):
     return (xc, yc, zc)
 
 
-# Gives the lowest point of an object.
+"""
+Gives the lowest point of an object.
+
+@type dist: blender object
+@param dist: an investigated object to determine its lowest point
+@rtype: float
+@return: lowest point of the vectorized object
+"""
 def objectLowestPoint(obj):
     matrix_w = obj.matrix_world
     vectors = [matrix_w * vertex.co for vertex in obj.data.vertices]
     return min(vectors, key=lambda item: item.z)
 
 
-# Gives the lowest point of the full configuration.
+"""
+Gives the lowest point of the full configuration.
+
+@rtype: float
+@return: lowest point of the set of vectorized objects
+"""
 def absoluteLowestPoint():
     bpy.ops.object.select_all(action='SELECT')
     obs = bpy.context.selected_objects
@@ -35,7 +53,17 @@ def absoluteLowestPoint():
         return minv
 
 
-# Gives a cube object randomly rotated around the origin.
+"""
+Adds a cube into the scene.
+Position is the origin and it is randomly rotated.
+
+@type location: tuple
+@param location: initial location of the cube, default: (0,0,0)
+@type location: tuple
+@param location: initial rotation of the cube, default: random
+@rtype: blender object
+@return: a blender cube that is added to the scene
+"""
 def randomCube():
     bpy.ops.mesh.primitive_cube_add(location=(0, 0, 0),
                                     rotation=(
@@ -47,7 +75,16 @@ def randomCube():
     return c
 
 
-# Gives a fixed cube.
+"""
+Adds a cube into the scene with fixed position and orientation.
+
+@type location: tuple
+@param location: initial location of the cube, default: (0,0,0)
+@type location: tuple
+@param location: initial rotation of the cube, default: random
+@rtype: blender object
+@return: a blender cube that is added to the scene
+"""
 def fixedCube(obj_name="cube", rot=(1, 1, 1), col=(0.5, 0.5, 0.5)):
     bpy.ops.mesh.primitive_cube_add(location=(0, 0, 0), rotation=rot)
     c = bpy.context.object
