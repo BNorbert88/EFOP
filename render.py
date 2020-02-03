@@ -49,7 +49,7 @@ def absolute_lowest_point():
         matrix_w = object.matrix_world
         vectors = [matrix_w * vertex.co for vertex in object.data.vertices]
         v = min(vectors, key=lambda item: item.z)
-        if minv[2] > v[2]:
+        if min_v[2] > v[2]:
             min_v = v
         return min_v
 
@@ -347,7 +347,7 @@ world.mist_settings.depth = 15
 world.mist_settings.height = 10
 
 # Saving information about the generated configurations.
-f = open("D:/kocka/images/test/data.txt", "w")
+f = open("/mnt/data/PycharmProjects/EFOP/images/test/data.txt", "w")
 
 # Generates a list of name-rotation-color triples of objects.
 list_objects_positions = []
@@ -380,28 +380,28 @@ for i in range(10):
 # with 9 intensity of mist.
 for obj in list_objects_positions:
 
-    deleteAll()  # Clear the scene
-    fix_obj = fixedObject(obj_name=obj[0], rot=obj[1], col=obj[2])  # Generate an object
+    delete_all()  # Clear the scene
+    fix_obj = fixed_object(obj_name=obj[0], rotation=obj[1], color=obj[2])  # Generate an object
     f.write(fix_obj[1].name + " -- type: "
             + fix_obj[0] + ", position: "
             + str(obj[1]) + ", color: "
             + str(obj[2]) + "\n")  # Write the data of the object into the data file.
-    bpy.ops.mesh.primitive_plane_add(radius=10, location=absoluteLowestPoint())  # Default base plane
+    bpy.ops.mesh.primitive_plane_add(radius=10, location=absolute_lowest_point())  # Default base plane
 
     for light in list_lights_positions:
         bpy.ops.object.select_by_type(type='LAMP')
         bpy.ops.object.delete(use_global=False)  # Clear all the existing lamps
-        fixedLamp(obj_name=light[0], pos=light[1], ener=light[2])  # Create a new lamp in the scene
+        fixed_lamp(obj_name=light[0], position=light[1], lamp_energy=light[2])  # Create a new lamp in the scene
 
         for cam in list_cameras_positions:
             bpy.ops.object.select_by_type(type='CAMERA')
             bpy.ops.object.delete(use_global=False)  # Deletes all the existing camera
-            fixedCamera(obj_name=cam[0], loc=cam[1])  # Creates a new camera
+            fixed_camera(obj_name=cam[0], loc=cam[1])  # Creates a new camera
 
             # Render a picture with the specific object, lamp and camera (without mist).
             world.mist_settings.use_mist = False  # Mist is turn off, but the default is also off.
             bpy.context.scene.render.image_settings.file_format = 'PNG'
-            bpy.context.scene.render.filepath = "D:/kocka/images/test/" + light[0] + "_" + obj[0] + "_" \
+            bpy.context.scene.render.filepath = "/mnt/data/PycharmProjects/EFOP/images/test/" + light[0] + "_" + obj[0] + "_" \
                                                 + cam[0] + "_mist0.png"
             bpy.context.scene.render.resolution_x = 200
             bpy.context.scene.render.resolution_y = 200
@@ -409,7 +409,7 @@ for obj in list_objects_positions:
 
             # Render a picture with the specific object, lamp and camera without shadow.
             bpy.data.objects[light[0]].data.shadow_method = 'NOSHADOW'
-            bpy.context.scene.render.filepath = "D:/kocka/images/test/" + light[0] + "_" + obj[0] + "_" \
+            bpy.context.scene.render.filepath = "/mnt/data/PycharmProjects/EFOP/images/test/" + light[0] + "_" + obj[0] + "_" \
                                                 + cam[0] + "_mist0_noshadow.png"
             bpy.ops.render.render(write_still=1)
 
@@ -418,7 +418,7 @@ for obj in list_objects_positions:
             world.mist_settings.use_mist = True
             for j in range(9):
                 world.mist_settings.intensity = (j + 1) / 10
-                bpy.context.scene.render.filepath = "D:/kocka/images/test/" + light[0] + "_" + obj[0] + "_" \
+                bpy.context.scene.render.filepath = "/mnt/data/PycharmProjects/EFOP/images/test/" + light[0] + "_" + obj[0] + "_" \
                                                     + cam[0] + "_mist" + str(j + 1) + ".png"
                 bpy.ops.render.render(write_still=1)
 
