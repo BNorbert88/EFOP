@@ -1,4 +1,4 @@
-For necessary packages, see ```requirements.txt```.
+For necessary packages, see ```requirements.txt``` (you can use it to create a conda environment).
 
 For evaluating discriminator on a test set:
 - download ```weights.h5``` from https://www.dropbox.com/sh/jm4dqvm5v1r56t4/AADo8F5p4HD0dUrkBheuM5T2a?dl=0 and copy to the folder ```./model```
