@@ -26,20 +26,24 @@ def save_all_traffic_cam():
         print("downloading from", cam_id)
         url = feature['properties']['href']
         try:
-            response2 = requests.get(url)
-            if response2.status_code == 200:
-                folder_name = os.path.join(FOLDER, cam_id)
-                if not os.path.isdir(folder_name):
-                    os.mkdir(folder_name)
-                file_time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f')
-                file_name = os.path.join(folder_name, cam_id + '-' + file_time + '.jpg')
-                with open(file_name, 'wb') as f:
-                    f.write(response2.content)
+            response2 = requests.get(url, stream=False)
+            if response2.status_code != 200:
+                print("unexpected status code", response2.status_code)
+                continue
+
+            folder_name = os.path.join(FOLDER, cam_id)
+            if not os.path.isdir(folder_name):
+                os.mkdir(folder_name)
+            file_time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f')
+            file_name = os.path.join(folder_name, cam_id + '-' + file_time + '.jpg')
+            with open(file_name, 'wb') as f:
+                f.write(response2.content)
 
             feature['file_name'] = file_name
             feature['file_time'] = file_time
             with open(os.path.join(FOLDER, 'adatok.txt'), 'at') as f:
                 f.write(json.dumps(feature) + '\n')
+
         except requests.exceptions.ConnectionError:
             print("download failed from", cam_id)
 
