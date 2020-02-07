@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 #
-# Copyright (C) 2019-2020, University of Szeged, Bogya Norbert
+# Copyright (C) 2019-2020, University of Szeged
+# Authors: Bogya Norbert, Miklos Maroti
 #
 
 from datetime import datetime

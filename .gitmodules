@@ -1,0 +1,3 @@
+[submodule "Mask-ShadowGAN"]
+	path = Mask-ShadowGAN
+	url = https://github.com/mmaroti/Mask-ShadowGAN.git
